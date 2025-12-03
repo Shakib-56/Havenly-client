@@ -1,12 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
 import logo from "./../Navbar/HavenlylLogo.png";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
+import { AuthContext } from "../../context/AuthContext/AuthContext";
 
 function Navbar() {
+  const { user, signOutUser } = useContext(AuthContext);
+  const handleSignOut = () => {
+    signOutUser()
+      .then(() => {
+        console.log("User signed out successfully");
+        // Handle successful sign out if needed
+      })
+      .catch((error) => {
+        // Handle errors if needed
+        console.error("Sign out error:", error);
+      });
+  };
   const links = (
     <>
       <li>
         <Link to="/">Home</Link>
+      </li>
+      <li>
+        <Link to="/rooms">Rooms</Link>
       </li>
     </>
   );
@@ -43,11 +59,28 @@ function Navbar() {
             <img src={logo} className="max-w-2xl h-12" alt="Havenly Logo" />
           </div>
         </div>
-        <div className="navbar-center hidden lg:flex">
+        <div className="navbar-center hidden lg:flex lg:flex-row">
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
-        <div className="navbar-end">
-          <a className="btn text-white bg-blue-800">Sign In</a>
+        <div className="navbar-end ">
+          {user ? (
+            <button onClick={handleSignOut} className="btn">
+              Sign Out
+            </button>
+          ) : (
+            <>
+              <div className="space-x-4">
+                <NavLink className="btn" to="/register">
+                  {" "}
+                  Resgister
+                </NavLink>
+                <NavLink className="btn" to="/signin">
+                  {" "}
+                  Sign In
+                </NavLink>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
